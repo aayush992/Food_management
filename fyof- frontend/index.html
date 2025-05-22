@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FYOF</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.css" integrity="sha512-UTNP5BXLIptsaj5WdKFrkFov94lDx+eBvbKyoe1YAfjeRPC+gT5kyZ10kOHCfNZqEui1sxmqvodNUx3KbuYI/A==" crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+  
+  <style>
+    /* ... existing styles ... */
+    
+    .gallery .img {
+        height: 300px;
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .gallery .img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery .img img:hover {
+        transform: scale(1.1);
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <header>
+    <div class="content flex_space">
+      <div class="logo">
+        <img src="images/logo.png" alt="fyof">
+      </div>
+      <div class="navlinks">
+        <ul id="menulist">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="service.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><i class="fa fa-search"></i></li>
+          <li><button class="primary-btn" onclick="window.location.href='login.html'">BOOK NOW</button></li>
+          <li><button class="primary-btn" id="logoutBtn">LOGOUT</button></li>
+        </ul>
+        <span class="fa fa-bars" onclick="menutoggle()"></span>
+      </div>
+    </div>
+  </header>
+
+
+  <script>
+    var menulist = document.getElementById('menulist');
+    menulist.style.maxHeight = "0px";
+
+    function menutoggle() {
+      if (menulist.style.maxHeight == "0px") {
+        menulist.style.maxHeight = "100vh";
+      } else {
+        menulist.style.maxHeight = "0px";
+      }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userName');
+      window.location.href = 'login.html';
+    });
+
+    window.addEventListener('load', function() {
+      const token = localStorage.getItem('token');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const bookNowBtn = document.querySelector('button.primary-btn:not(#logoutBtn)');
+      
+      if (token) {
+        logoutBtn.style.display = 'block';
+        bookNowBtn.onclick = function() {
+          window.location.href = 'dashboard.html';
+        };
+        bookNowBtn.textContent = 'DASHBOARD';
+      } else {
+        logoutBtn.style.display = 'none';
+        bookNowBtn.onclick = function() {
+          window.location.href = 'login.html';
+        };
+        bookNowBtn.textContent = 'BOOK NOW';
+      }
+    });
+  </script>
+
+
+  <section class="home">
+    <div class="content">
+      <div class="owl-carousel owl-theme">
+        <div class="item">
+          <img src="images/food1.png" alt="Delicious Food">
+        </div>
+        <div class="item">
+          <img src="images/food3.jpg" alt="Restaurant Interior">
+        </div>
+        <div class="item">
+          <img src="images/food2.webp.jpg" alt="Street Food">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.js" integrity="sha512-gY25nC63ddE0LcLPhxUJGFxa2GoIyA5FLym4UJqHDEMHjp8RET6Zn/SHo1sltt3WuVtqfyxECP38/daUc/WVEA==" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+  <script>
+    $('.owl-carousel').owlCarousel({
+      loop: true,
+      margin: 0,
+      nav: true,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 3000,
+      autoplayHoverPause: true,
+      navText: ["<i class = 'fa fa-chevron-left'></i>", "<i class = 'fa fa-chevron-right'></i>"],
+      responsive: {
+        0: {
+          items: 1
+        },
+        768: {
+          items: 1
+        },
+        1000: {
+          items: 1
+        }
+      }
+    })
+  </script>
+
+
+
+
+  <section class="book">
+    <div class="container flex_space">
+      <div class="text">
+        <h1> <span>Book </span> Your Meal </h1>
+      </div>
+      <div class="form">
+        <form class="grid" id="bookingForm">
+          <input type="datetime-local" id="bookingDateTime" min="" required>
+          <input type="number" placeholder="Number of Persons" min="1" required>
+          <input type="submit" value="CHECK AVAILABILITY">
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Set minimum date-time to current time + 12 hours
+    const bookingDateInput = document.getElementById('bookingDateTime');
+    const now = new Date();
+    now.setHours(now.getHours() + 12);
+    const minDateTime = now.toISOString().slice(0, 16);
+    bookingDateInput.min = minDateTime;
+    
+    // Optional: Set a default value to current time + 12 hours
+    bookingDateInput.value = minDateTime;
+    
+    // Form submission handler
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Add your booking logic here
+      alert('Booking request received! We will confirm your reservation shortly.');
+    });
+  </script>
+
+
+
+  <section class="about top">
+    <div class="container flex">
+      <div class="left">
+        <div class="heading">
+          <h1>WELCOME</h1>
+          <h2>To FYOF</h2>
+        </div>
+        <p>At FYOF – Find Your Own Food, we believe great food shouldn't be hard to find. Our platform connects food lovers with nearby culinary spots of all kinds—whether you're craving gourmet dishes at a restaurant, a cozy café vibe, or the unbeatable flavor of a roadside food stall. FYOF helps you explore your local food scene based on your location and budget, offering a simple, user-friendly way to discover hidden gems and popular favorites alike. Whether you're a student, a traveler, or just someone hungry for something new, FYOF makes your food journey easier and more exciting.</p>
+        <button class="primary-btn">ABOUT US</button>
+      </div>
+      <div class="right">
+        <img src="images/about.png" alt="">
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <section class="rooms">
+    <div class="container top">
+      <div class="heading">
+        <h1>EXPOLRE</h1>
+        <h2>Our Outlets</h2>
+        <p>From high-end restaurants and buzzing cafes to budget-friendly food stalls and local roadside gems, 
+          FYOF brings you a wide range of food outlets all in one place.
+           We've curated listings that cater to every taste and wallet—making it easier than ever to discover nearby options that suit your cravings and budget.
+            Whether you're looking for a quick bite or a full dining experience, 
+            explore a variety of trusted food spots recommended by real users and updated regularly to keep your choices fresh and relevant.
+        </p>
+      </div>
+
+      <div class="content mtop">
+        <div class="owl-carousel owl-carousel1 owl-theme">
+          <div class="items">
+            <div class="image">
+              <img src="images/outlet1.jpg" alt="Outlet 1">
+            </div>
+            <div class="text">
+              <h2>Fine Dining Restaurant</h2>
+              <div class="rate flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget, all in one convenient platform.
+              </p>
+              <div class="button flex">
+                <button class="primary-btn">BOOK NOW</button>
+                <h3>50 <span> <br> Starting price </span> </h3>
+              </div>
+            </div>
+          </div>
+          <div class="items">
+            <div class="image">
+              <img src="images/outlet2.jpg" alt="Outlet 2">
+            </div>
+            <div class="text">
+              <h2>Cozy Café</h2>
+              <div class="rate flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget, all in one convenient platform.
+              </p>
+              <div class="button flex">
+                <button class="primary-btn">BOOK NOW</button>
+                <h3> <span> <br>  </span> </h3>
+              </div>
+            </div>
+          </div>
+          <div class="items">
+            <div class="image">
+              <img src="images/outlet3.jpg" alt="Outlet 3">
+            </div>
+            <div class="text">
+              <h2>Street Food Corner</h2>
+              <div class="rate flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget, all in one convenient platform.
+              </p>
+              <div class="button flex">
+                <button class="primary-btn">BOOK NOW</button>
+                <h3> <span> <br>  </span> </h3>
+              </div>
+            </div>
+          </div>
+          <div class="items">
+            <div class="image">
+              <img src="" alt="">
+            </div>
+            <div class="text">
+              <h2>Outlet</h2>
+              <div class="rate flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget, all in one convenient platform.
+              </p>
+              <div class="button flex">
+                <button class="primary-btn">BOOK NOW</button>
+                <h3> <span> <br>  </span> </h3>
+              </div>
+            </div>
+          </div>
+          <div class="items">
+            <div class="image">
+              <img src="" alt="">
+            </div>
+            <div class="text">
+              <h2>Outlet</h2>
+              <div class="rate flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget, all in one convenient platform.
+              </p>
+              <div class="button flex">
+                <button class="primary-btn">BOOK NOW</button>
+                <h3> <span> <br> </span> </h3>
+              </div>
+            </div>
+          </div>
+          <div class="items">
+            <div class="image">
+              <img src="" alt="">
+            </div>
+            <div class="text">
+              <h2>outlet</h2>
+              <div class="rate flex">
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+                <i class="fa fa-star"></i>
+              </div>
+              <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget, all in one convenient platform.
+              </p>
+              <div class="button flex">
+                <button class="primary-btn">BOOK NOW</button>
+                <h3> <span> <br> </span> </h3>
+              </div>
+            </div>
+          </div>
+          
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    $('.owl-carousel1').owlCarousel({
+      loop: true,
+      margin: 40,
+      nav: true,
+      dots: false,
+      navText: ["<i class = 'fa fa-chevron-left'></i>", "<i class = 'fa fa-chevron-right'></i>"],
+      responsive: {
+        0: {
+          items: 1
+        },
+        768: {
+          items: 2,
+          margin: 10,
+        },
+        1000: {
+          items: 3
+        }
+      }
+    })
+  </script>
+
+
+
+  <section class="gallery">
+    <div class="container top">
+      <div class="heading">
+        <h1>PHOTOS</h1>
+        <h2>Our Gallery</h2>
+        <p>Take a visual tour of the food experiences waiting for you! 
+          Our gallery showcases dishes, places, and moments from restaurants, cafés,
+           and food stalls featured on FYOF—helping you see the flavor before you taste it.
+      </div>
+    </div>
+
+        <div class="content mtop">      <div class="owl-carousel owl-carousel1 owl-theme">        <div class="items">          <div class="img">            <img src="images/gallery1.jpg" alt="Gallery Image 1">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Delicious Cuisine</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery2.jpg" alt="Gallery Image 2">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Fine Dining Experience</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery3.jpg" alt="Gallery Image 3">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Street Food Delights</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery4.jpg" alt="Gallery Image 4">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Local Favorites</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery5.jpg" alt="Gallery Image 5">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Café Culture</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery6.jpg" alt="Gallery Image 6">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Sweet Treats</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery7.jpg" alt="Gallery Image 7">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Authentic Flavors</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="images/gallery8.jpg" alt="Gallery Image 8">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Food Adventures</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop" alt="Gourmet Plating">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Gourmet Plating</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?w=800&auto=format&fit=crop" alt="Fresh Breakfast">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Fresh Breakfast</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=800&auto=format&fit=crop" alt="Seasonal Specialties">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Seasonal Specialties</h3>          </div>        </div>        <div class="items">          <div class="img">            <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&auto=format&fit=crop" alt="Healthy Bowls">          </div>          <div class="overlay">            <span class="fa fa-plus"> </span>            <h3>Healthy Bowls</h3>          </div>        </div>      </div>    </div>
+  </section>
+
+
+  <script>
+    $('.owl-carousel1').owlCarousel({
+      loop: true,
+      margin: 0,
+      nav: true,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 1000,
+      autoplayHoverPause: true,
+      navText: ["<i class = 'fa fa-chevron-left'></i>", "<i class = 'fa fa-chevron-right'></i>"],
+      responsive: {
+        0: {
+          items: 1
+        },
+        768: {
+          items: 4,
+        },
+        1000: {
+          items: 6
+        }
+      }
+    })
+  </script>
+
+
+  <section class="services top">
+    <div class="container">
+      <div class="heading">
+        <h1>SERVICES</h1>
+        <h2>Our Services</h2>
+        <p>FYOF offers more than just food discovery—we make your meals convenient and affordable too.
+           With our Book a Meal feature, you can reserve food in advance at your favorite spots.
+            Need regular meals? Our Monthly Mess service provides reliable, home-style food plans.
+             Plus, enjoy Free Delivery on select outlets, bringing delicious food to your doorstep without extra cost.
+      </div>
+
+
+      <div class="content flex_space">
+        <div class="left grid2">
+          <div class="box" onclick="window.location.href='menu.html'">
+            <div class="text">
+              <i class="fa-solid fa-champagne-glasses"></i>
+              <h3>Delicious Food</h3>
+            </div>
+          </div>
+          <div class="box" onclick="window.location.href='delivery.html'">
+            <div class="text">
+              <i class="fa-solid fa-person-biking"></i>
+              <h3>Free Home-delivery</h3>
+            </div>
+          </div>
+          <div class="box" onclick="window.location.href='booking.html'">
+            <div class="text">
+              <i class="fa-solid fa-utensils"></i>
+              <h3>Booking Meal</h3>
+            </div>
+          </div>
+          <div class="box" onclick="window.location.href='register-outlet.html'">
+            <div class="text">
+              <i class="fa-solid fa-house"></i>
+              <h3>List Your Own Outlet</h3>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <img src="images/serviceslogo.png" alt="Our Services">
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+  <section class="news top rooms">
+    <div class="container">
+      <div class="heading">
+        <h1>Customer</h1>
+        <h2>Reviews</h2>
+        <p>Your feedback matters! Share your experiences on FYOF to help others discover the best food spots and help us keep improving our services</p>
+      </div>
+
+
+      <div class="content flex">
+        <div class="left grid2">
+          <div class="items">
+            <div class="image">
+              <img src="" alt="">
+            </div>
+            <div class="text">
+              <h2>any name</h2>
+              <div class="admin flex">
+                <i class="fa fa-user"></i>
+                <label>reached</label>
+                <i class="fa fa-heart"></i>
+                <label>likes</label>
+                <i class="fa fa-comments"></i>
+              </div>
+              <p>the comment.</p>
+            </div>
+          </div>
+          <div class="items">
+            <div class="image">
+              <img src="images/blog-2.png" alt="">
+            </div>
+            <div class="text">
+              <h2>name2</h2>
+              <div class="admin flex">
+                <i class="fa fa-user"></i>
+                <label>reac</label>
+                <i class="fa fa-heart"></i>
+                <label>like</label>
+                <i class="fa fa-comments"></i>
+              </div>
+              <p>comment</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="box flex">
+            <div class="img">
+              <img src="" alt="">
+            </div>
+            <div class="stext">
+              <h2>MOHAMMAD AREEB AMJAD</h2>
+              <p>Lorem ipsum dolor sit amet constur adipisicing elit sed do eiusmtem por incid.
+              </p>
+            </div>
+          </div>
+          <div class="box flex">
+            <div class="img">
+              <img src="" alt="">
+            </div>
+            <div class="stext">
+              <h2>AAYUSH SAINI</h2>
+              <p>Lorem ipsum dolor sit amet constur adipisicing elit sed do eiusmtem por incid.
+              </p>
+            </div>
+          </div>
+          <div class="box flex">
+            <div class="img">
+              <img src="" alt="">
+            </div>
+            <div class="stext">
+              <h2>KANISHKA BHANDARI</h2>
+              <p>Lorem ipsum dolor sit amet constur adipisicing elit sed do eiusmtem por incid.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="listing mtop">
+    <div class="container flex_space">
+      <h1>List your Own Outlet.</h1>
+      <p>our team will contact you shorty</p>
+      <input type="text" placeholder="Your Email">
+      <input type="text" value="start">
+    </div>
+  </section>
+
+
+  <footer>
+    <div class="container grid">
+      <div class="box">
+        <img src="images/logo-2.png" alt="">
+        <p>At FYOF – Find Your Own Food, we make discovering nearby eating spots effortless, whether you're looking for messes, restaurants, cafes, or hidden roadside gems. Our platform not only helps you explore and choose where to eat but also allows outlet owners to list their services and reach more customers. With added conveniences like free home delivery, easy meal booking, and monthly mess subscriptions, FYOF is your trusted partner in satisfying every food craving with ease and convenience.</p>
+
+        <div class="icon">
+          <i class="fa fa-facebook-f"></i>
+          <i class="fa fa-instagram"></i>
+          <i class="fa fa-twitter"></i>
+          <i class="fa fa-youtube"></i>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2>Links</h2>
+        <ul>
+          <li>Company History</li>
+          <li>About Us</li>
+          <li>Contact Us</li>
+          <li>Services</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2>Contact Us</h2>
+        <p>We're here to help! Whether you have questions, need support, want to list your outlet, or just want to share feedback, the FYOF – Find Your Own Food team is ready to assist you. Reach out to us anytime through our contact form, email, or phone, and we'll get back to you as soon as possible. Let's make your food experience even better together!
+        </p>
+        <i class="fa fa-location-dot"></i>
+        <label>Graphic Era Hill Univerity, Clement Town, Subhash Nagar, Dehradu, Uttrakhand. </label> <br>
+        <i class="fa fa-phone"></i>
+        <label>7017083862</label> <br>
+        <i class="fa fa-envelope"></i>
+        <label>areeb.amjad24@gmail.com</label> <br>
+      </div>
+    </div>
+  </footer>
+
+
+
+
+
+  <script src="https://kit.fontawesome.com/032d11eac3.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

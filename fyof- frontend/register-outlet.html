@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Your Outlet - FYOF</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .register-container {
+            padding: 20px;
+        }
+
+        .register-form {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .form-section {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h3 {
+            margin-bottom: 15px;
+            color: #7fc142;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+
+        .image-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .image-upload i {
+            font-size: 40px;
+            color: #7fc142;
+        }
+
+        .submit-btn {
+            background: #7fc142;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #6ba538;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="images/logo.png" alt="FYOF logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="menu.html">
+                    <i class='bx bxs-food-menu'></i>
+                    <span class="text">Menu</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="register-outlet.html">
+                    <i class='bx bxs-store'></i>
+                    <span class="text">Register Outlet</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="profile.html" class="profile">
+                <img src="images/person1.jpg">
+            </a>
+        </nav>
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Register Your Outlet</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">Register Outlet</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="register-container">
+                <form class="register-form" id="outletForm">
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="outletName">Outlet Name*</label>
+                                <input type="text" id="outletName" name="outletName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cuisine">Cuisine Type*</label>
+                                <select id="cuisine" name="cuisine" required>
+                                    <option value="">Select Cuisine</option>
+                                    <option value="indian">Indian</option>
+                                    <option value="chinese">Chinese</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="mexican">Mexican</option>
+                                    <option value="thai">Thai</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Contact Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number*</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email*</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Location Details</h3>
+                        <div class="form-group">
+                            <label for="address">Complete Address*</label>
+                            <textarea id="address" name="address" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="city">City*</label>
+                                <input type="text" id="city" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pincode">PIN Code*</label>
+                                <input type="text" id="pincode" name="pincode" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Operating Hours</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="openTime">Opening Time*</label>
+                                <input type="time" id="openTime" name="openTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="closeTime">Closing Time*</label>
+                                <input type="time" id="closeTime" name="closeTime" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Operating Days</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="monday" name="days[]" value="monday">
+                                    <label for="monday">Monday</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tuesday" name="days[]" value="tuesday">
+                                    <label for="tuesday">Tuesday</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="wednesday" name="days[]" value="wednesday">
+                                    <label for="wednesday">Wednesday</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="thursday" name="days[]" value="thursday">
+                                    <label for="thursday">Thursday</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="friday" name="days[]" value="friday">
+                                    <label for="friday">Friday</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="saturday" name="days[]" value="saturday">
+                                    <label for="saturday">Saturday</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="sunday" name="days[]" value="sunday">
+                                    <label for="sunday">Sunday</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Additional Information</h3>
+                        <div class="form-group">
+                            <label for="description">Outlet Description*</label>
+                            <textarea id="description" name="description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Outlet Images</label>
+                            <div class="image-upload">
+                                <i class='bx bx-image-add'></i>
+                                <p>Click to upload images</p>
+                                <input type="file" id="images" name="images" multiple accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Register Outlet</button>
+                </form>
+            </div>
+        </main>
+    </section>
+
+    <script>
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+        });
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Image upload handling
+        const imageUpload = document.querySelector('.image-upload');
+        const fileInput = document.getElementById('images');
+
+        imageUpload.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', () => {
+            // Add your image preview logic here
+        });
+
+        // Form submission
+        document.getElementById('outletForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            alert('Outlet registration request submitted successfully!');
+            this.reset();
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            if(confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html> 

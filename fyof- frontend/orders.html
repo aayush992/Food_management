@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - FYOF</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .orders-container {
+            padding: 20px;
+        }
+
+        .order-filters {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .order-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: #7fc142;
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-delivered {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-processing {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-cancelled {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .detail-group h4 {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .detail-group p {
+            font-weight: 500;
+        }
+
+        .order-items {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-quantity {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .item-price {
+            font-weight: 500;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .total-label {
+            font-weight: 500;
+        }
+
+        .total-amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: #7fc142;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #7fc142;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6ba538;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .tracking-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .tracking-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            text-align: center;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+
+        .step.active .step-icon {
+            background: #7fc142;
+            color: white;
+        }
+
+        .step.completed .step-icon {
+            background: #7fc142;
+            color: white;
+        }
+
+        .step p {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="images/logo.png" alt="FYOF logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="menu.html">
+                    <i class='bx bxs-food-menu'></i>
+                    <span class="text">Menu</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="orders.html">
+                    <i class='bx bxs-cart'></i>
+                    <span class="text">Orders</span>
+                </a>
+            </li>
+            <li>
+                <a href="profile.html">
+                    <i class='bx bxs-user'></i>
+                    <span class="text">Profile</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search orders...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="cart.html" class="notification">
+                <i class='bx bxs-cart'></i>
+                <span class="num">2</span>
+            </a>
+            <a href="profile.html" class="profile">
+                <img src="images/person1.jpg">
+            </a>
+        </nav>
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Orders</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">Orders</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="orders-container">
+                <div class="order-filters">
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="all">All Orders</option>
+                            <option value="processing">Processing</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="date">Date Range</label>
+                        <input type="date" id="date">
+                    </div>
+                    <div class="filter-group">
+                        <label for="restaurant">Restaurant</label>
+                        <select id="restaurant">
+                            <option value="all">All Restaurants</option>
+                            <option value="spice-garden">Spice Garden</option>
+                            <option value="pizza-palace">Pizza Palace</option>
+                            <option value="grand-kitchen">The Grand Kitchen</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="order-list">
+                    <!-- Order 1 -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#ORD123456</span>
+                            <span class="order-status status-processing">Processing</span>
+                        </div>
+                        <div class="order-details">
+                            <div class="detail-group">
+                                <h4>Restaurant</h4>
+                                <p>Spice Garden</p>
+                            </div>
+                            <div class="detail-group">
+                                <h4>Order Date</h4>
+                                <p>March 15, 2024</p>
+                            </div>
+                            <div class="detail-group">
+                                <h4>Delivery Address</h4>
+                                <p>123 Main St, Clement Town</p>
+                            </div>
+                        </div>
+                        <div class="order-items">
+                            <ul class="item-list">
+                                <li class="item">
+                                    <div class="item-name">
+                                        <i class='bx bx-dish'></i>
+                                        <span>Butter Chicken</span>
+                                        <span class="item-quantity">x2</span>
+                                    </div>
+                                    <span class="item-price">₹600</span>
+                                </li>
+                                <li class="item">
+                                    <div class="item-name">
+                                        <i class='bx bx-dish'></i>
+                                        <span>Garlic Naan</span>
+                                        <span class="item-quantity">x4</span>
+                                    </div>
+                                    <span class="item-price">₹120</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="order-total">
+                            <span class="total-label">Total Amount</span>
+                            <span class="total-amount">₹720</span>
+                        </div>
+                        <div class="tracking-steps">
+                            <div class="step completed">
+                                <div class="step-icon">
+                                    <i class='bx bx-check'></i>
+                                </div>
+                                <p>Order Placed</p>
+                            </div>
+                            <div class="step completed">
+                                <div class="step-icon">
+                                    <i class='bx bx-check'></i>
+                                </div>
+                                <p>Confirmed</p>
+                            </div>
+                            <div class="step active">
+                                <div class="step-icon">
+                                    <i class='bx bx-dish'></i>
+                                </div>
+                                <p>Preparing</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">
+                                    <i class='bx bx-cycling'></i>
+                                </div>
+                                <p>On the Way</p>
+                            </div>
+                            <div class="step">
+                                <div class="step-icon">
+                                    <i class='bx bx-package'></i>
+                                </div>
+                                <p>Delivered</p>
+                            </div>
+                        </div>
+                        <div class="order-actions">
+                            <button class="action-btn btn-primary">Track Order</button>
+                            <button class="action-btn btn-secondary">Cancel Order</button>
+                        </div>
+                    </div>
+
+                    <!-- Order 2 -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span class="order-id">#ORD123455</span>
+                            <span class="order-status status-delivered">Delivered</span>
+                        </div>
+                        <div class="order-details">
+                            <div class="detail-group">
+                                <h4>Restaurant</h4>
+                                <p>Pizza Palace</p>
+                            </div>
+                            <div class="detail-group">
+                                <h4>Order Date</h4>
+                                <p>March 14, 2024</p>
+                            </div>
+                            <div class="detail-group">
+                                <h4>Delivery Address</h4>
+                                <p>456 Park Road, GMS Road</p>
+                            </div>
+                        </div>
+                        <div class="order-items">
+                            <ul class="item-list">
+                                <li class="item">
+                                    <div class="item-name">
+                                        <i class='bx bx-dish'></i>
+                                        <span>Margherita Pizza</span>
+                                        <span class="item-quantity">x1</span>
+                                    </div>
+                                    <span class="item-price">₹299</span>
+                                </li>
+                                <li class="item">
+                                    <div class="item-name">
+                                        <i class='bx bx-dish'></i>
+                                        <span>Garlic Bread</span>
+                                        <span class="item-quantity">x1</span>
+                                    </div>
+                                    <span class="item-price">₹149</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="order-total">
+                            <span class="total-label">Total Amount</span>
+                            <span class="total-amount">₹448</span>
+                        </div>
+                        <div class="order-actions">
+                            <button class="action-btn btn-primary">Reorder</button>
+                            <button class="action-btn btn-secondary">Write Review</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <script>
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+        });
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Filter functionality
+        const filters = document.querySelectorAll('.filter-group select, .filter-group input');
+        filters.forEach(filter => {
+            filter.addEventListener('change', function() {
+                // Add your filter logic here
+            });
+        });
+
+        // Order actions
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent.toLowerCase();
+                const orderId = this.closest('.order-card').querySelector('.order-id').textContent;
+                
+                switch(action) {
+                    case 'track order':
+                        // Add tracking logic
+                        break;
+                    case 'cancel order':
+                        if(confirm('Are you sure you want to cancel this order?')) {
+                            // Add cancellation logic
+                        }
+                        break;
+                    case 'reorder':
+                        // Add reorder logic
+                        break;
+                    case 'write review':
+                        // Add review logic
+                        break;
+                }
+            });
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            if(confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html> 

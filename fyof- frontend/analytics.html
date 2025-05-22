@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - FYOF</title>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- My CSS -->
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="logo.png" alt="our logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="analytics.html">
+                    <i class='bx bxs-doughnut-chart'></i>
+                    <span class="text">Analytics</span>
+                </a>
+            </li>
+            <li>
+                <a href="messages.html">
+                    <i class='bx bxs-message-dots'></i>
+                    <span class="text">Message</span>
+                </a>
+            </li>
+            <li>
+                <a href="service.html">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Help</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <a href="index.html" class="nav-link">Home</a>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="#" class="notification">
+                <i class='bx bxs-bell'></i>
+                <span class="num">8</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="person1.jpg">
+            </a>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Analytics</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">Analytics</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <ul class="box-info">
+                <li>
+                    <i class='bx bxs-calendar-check'></i>
+                    <span class="text">
+                        <h3>1020</h3>
+                        <p>Total Orders</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-group'></i>
+                    <span class="text">
+                        <h3>2834</h3>
+                        <p>Total Customers</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-dollar-circle'></i>
+                    <span class="text">
+                        <h3>₹25,043</h3>
+                        <p>Total Revenue</p>
+                    </span>
+                </li>
+            </ul>
+
+            <div class="table-data">
+                <div class="order" style="flex: 2;">
+                    <div class="head">
+                        <h3>Revenue Analytics</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="order" style="flex: 1;">
+                    <div class="head">
+                        <h3>Order Distribution</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <canvas id="orderDistribution"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Popular Items</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Orders</th>
+                                <th>Revenue</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Butter Chicken</td>
+                                <td>245</td>
+                                <td>₹24,500</td>
+                                <td>4.8 ⭐</td>
+                            </tr>
+                            <tr>
+                                <td>Paneer Tikka</td>
+                                <td>189</td>
+                                <td>₹15,120</td>
+                                <td>4.6 ⭐</td>
+                            </tr>
+                            <tr>
+                                <td>Biryani</td>
+                                <td>176</td>
+                                <td>₹17,600</td>
+                                <td>4.7 ⭐</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+
+    <script>
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Monthly Revenue',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000],
+                    borderColor: '#3C91E6',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Order Distribution Chart
+        const distributionCtx = document.getElementById('orderDistribution').getContext('2d');
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Dine-in', 'Takeaway', 'Delivery'],
+                datasets: [{
+                    data: [300, 200, 500],
+                    backgroundColor: ['#3C91E6', '#FFCE26', '#FD7238']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        });
+
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+            switchMode.checked = true;
+        }
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html> 

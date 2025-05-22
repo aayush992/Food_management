@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery - FYOF</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .delivery-container {
+            padding: 20px;
+        }
+
+        .delivery-zones {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .zone-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .zone-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .zone-item.active {
+            border-color: #7fc142;
+            background: #f0f9eb;
+        }
+
+        .delivery-time {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .time-slot {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-slot:hover {
+            background: #f0f9eb;
+            border-color: #7fc142;
+        }
+
+        .time-slot.selected {
+            background: #7fc142;
+            color: white;
+            border-color: #7fc142;
+        }
+
+        .delivery-tracking {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tracking-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .tracking-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            background: white;
+            text-align: center;
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+
+        .step.active .step-icon {
+            background: #7fc142;
+            color: white;
+        }
+
+        .step.completed .step-icon {
+            background: #7fc142;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="images/logo.png" alt="FYOF logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="menu.html">
+                    <i class='bx bxs-food-menu'></i>
+                    <span class="text">Menu</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="delivery.html">
+                    <i class='bx bxs-truck'></i>
+                    <span class="text">Delivery</span>
+                </a>
+            </li>
+            <li>
+                <a href="orders.html">
+                    <i class='bx bxs-cart'></i>
+                    <span class="text">Orders</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Track your order...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="cart.html" class="notification">
+                <i class='bx bxs-cart'></i>
+                <span class="num">2</span>
+            </a>
+            <a href="profile.html" class="profile">
+                <img src="images/person1.jpg">
+            </a>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Delivery</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">Delivery</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="delivery-container">
+                <div class="delivery-zones">
+                    <h2>Delivery Zones</h2>
+                    <div class="zone-list">
+                        <div class="zone-item active">
+                            <h3>Zone A</h3>
+                            <p>Clement Town</p>
+                            <p>20-30 mins</p>
+                        </div>
+                        <div class="zone-item">
+                            <h3>Zone B</h3>
+                            <p>GMS Road</p>
+                            <p>30-40 mins</p>
+                        </div>
+                        <div class="zone-item">
+                            <h3>Zone C</h3>
+                            <p>Rajpur Road</p>
+                            <p>40-50 mins</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delivery-time">
+                    <h2>Delivery Time Slots</h2>
+                    <div class="time-slots">
+                        <div class="time-slot">11:00 AM - 12:00 PM</div>
+                        <div class="time-slot selected">12:00 PM - 1:00 PM</div>
+                        <div class="time-slot">1:00 PM - 2:00 PM</div>
+                        <div class="time-slot">2:00 PM - 3:00 PM</div>
+                        <div class="time-slot">3:00 PM - 4:00 PM</div>
+                        <div class="time-slot">4:00 PM - 5:00 PM</div>
+                    </div>
+                </div>
+
+                <div class="delivery-tracking">
+                    <h2>Track Your Order</h2>
+                    <div class="tracking-steps">
+                        <div class="step completed">
+                            <div class="step-icon">
+                                <i class='bx bx-check'></i>
+                            </div>
+                            <p>Order Placed</p>
+                        </div>
+                        <div class="step completed">
+                            <div class="step-icon">
+                                <i class='bx bx-check'></i>
+                            </div>
+                            <p>Preparing</p>
+                        </div>
+                        <div class="step active">
+                            <div class="step-icon">
+                                <i class='bx bx-cycling'></i>
+                            </div>
+                            <p>On the Way</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">
+                                <i class='bx bx-package'></i>
+                            </div>
+                            <p>Delivered</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+
+    <script>
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+        });
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Time slot selection
+        document.querySelectorAll('.time-slot').forEach(slot => {
+            slot.addEventListener('click', function() {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            if(confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html> 

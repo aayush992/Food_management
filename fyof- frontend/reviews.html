@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - FYOF</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .reviews-container {
+            padding: 20px;
+        }
+
+        .reviews-header {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rating-summary {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .overall-rating {
+            text-align: center;
+        }
+
+        .rating-number {
+            font-size: 48px;
+            font-weight: 600;
+            color: #7fc142;
+            line-height: 1;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            font-size: 24px;
+            margin: 5px 0;
+        }
+
+        .rating-count {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .rating-bars {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .bar-label {
+            min-width: 30px;
+            text-align: right;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #7fc142;
+        }
+
+        .bar-count {
+            min-width: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .write-review-btn {
+            background: #7fc142;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .write-review-btn:hover {
+            background: #6ba538;
+        }
+
+        .reviews-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviewer-name {
+            font-weight: 500;
+        }
+
+        .review-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .review-rating {
+            color: #ffc107;
+        }
+
+        .review-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .review-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .review-image {
+            border-radius: 5px;
+            overflow: hidden;
+            aspect-ratio: 1;
+        }
+
+        .review-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .review-footer {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .review-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .review-action:hover {
+            color: #7fc142;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .star-rating i {
+            cursor: pointer;
+        }
+
+        .star-rating i.active {
+            color: #ffc107;
+        }
+
+        .review-form-group {
+            margin-bottom: 20px;
+        }
+
+        .review-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .review-form-group textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .image-upload-container {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .image-upload-container i {
+            font-size: 40px;
+            color: #7fc142;
+            margin-bottom: 10px;
+        }
+
+        .submit-review-btn {
+            width: 100%;
+            background: #7fc142;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-review-btn:hover {
+            background: #6ba538;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="images/logo.png" alt="FYOF logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="menu.html">
+                    <i class='bx bxs-food-menu'></i>
+                    <span class="text">Menu</span>
+                </a>
+            </li>
+            <li>
+                <a href="orders.html">
+                    <i class='bx bxs-cart'></i>
+                    <span class="text">Orders</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="reviews.html">
+                    <i class='bx bxs-star'></i>
+                    <span class="text">Reviews</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search reviews...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="cart.html" class="notification">
+                <i class='bx bxs-cart'></i>
+                <span class="num">2</span>
+            </a>
+            <a href="profile.html" class="profile">
+                <img src="images/person1.jpg">
+            </a>
+        </nav>
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Reviews</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">Reviews</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="reviews-container">
+                <div class="reviews-header">
+                    <div class="rating-summary">
+                        <div class="overall-rating">
+                            <div class="rating-number">4.5</div>
+                            <div class="rating-stars">
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star-half'></i>
+                            </div>
+                            <div class="rating-count">Based on 128 reviews</div>
+                        </div>
+                        <div class="rating-bars">
+                            <div class="rating-bar">
+                                <span class="bar-label">5</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 70%"></div>
+                                </div>
+                                <span class="bar-count">89</span>
+                            </div>
+                            <div class="rating-bar">
+                                <span class="bar-label">4</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 20%"></div>
+                                </div>
+                                <span class="bar-count">26</span>
+                            </div>
+                            <div class="rating-bar">
+                                <span class="bar-label">3</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 5%"></div>
+                                </div>
+                                <span class="bar-count">7</span>
+                            </div>
+                            <div class="rating-bar">
+                                <span class="bar-label">2</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 3%"></div>
+                                </div>
+                                <span class="bar-count">4</span>
+                            </div>
+                            <div class="rating-bar">
+                                <span class="bar-label">1</span>
+                                <div class="bar-container">
+                                    <div class="bar-fill" style="width: 2%"></div>
+                                </div>
+                                <span class="bar-count">2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="write-review-btn" id="writeReviewBtn">Write a Review</button>
+                </div>
+
+                <div class="reviews-list">
+                    <!-- Review 1 -->
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">
+                                    <img src="images/person2.jpg" alt="Reviewer">
+                                </div>
+                                <div>
+                                    <div class="reviewer-name">Sarah Johnson</div>
+                                    <div class="review-date">March 15, 2024</div>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            Amazing food and quick delivery! The Butter Chicken was perfectly cooked and the naan was fresh and hot. Will definitely order again.
+                        </div>
+                        <div class="review-images">
+                            <div class="review-image">
+                                <img src="images/food1.jpg" alt="Food">
+                            </div>
+                            <div class="review-image">
+                                <img src="images/food2.jpg" alt="Food">
+                            </div>
+                        </div>
+                        <div class="review-footer">
+                            <div class="review-action">
+                                <i class='bx bx-like'></i>
+                                <span>24</span>
+                            </div>
+                            <div class="review-action">
+                                <i class='bx bx-comment'></i>
+                                <span>3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review 2 -->
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-avatar">
+                                    <img src="images/person3.jpg" alt="Reviewer">
+                                </div>
+                                <div>
+                                    <div class="reviewer-name">Mike Chen</div>
+                                    <div class="review-date">March 14, 2024</div>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bxs-star'></i>
+                                <i class='bx bx-star'></i>
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            Good pizza but took a bit longer than expected to arrive. The taste was great though, especially the garlic bread.
+                        </div>
+                        <div class="review-footer">
+                            <div class="review-action">
+                                <i class='bx bx-like'></i>
+                                <span>12</span>
+                            </div>
+                            <div class="review-action">
+                                <i class='bx bx-comment'></i>
+                                <span>1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- Write Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Write a Review</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="reviewForm">
+                <div class="star-rating" id="starRating">
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                    <i class='bx bx-star'></i>
+                </div>
+                <div class="review-form-group">
+                    <label for="reviewText">Your Review</label>
+                    <textarea id="reviewText" placeholder="Share your experience..." required></textarea>
+                </div>
+                <div class="image-upload-container" id="imageUpload">
+                    <i class='bx bx-image-add'></i>
+                    <p>Click to upload photos</p>
+                    <input type="file" multiple accept="image/*" style="display: none;">
+                </div>
+                <button type="submit" class="submit-review-btn">Submit Review</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+        });
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Review modal
+        const modal = document.getElementById('reviewModal');
+        const writeReviewBtn = document.getElementById('writeReviewBtn');
+        const closeBtn = document.querySelector('.modal-close');
+
+        writeReviewBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Star rating
+        const starRating = document.getElementById('starRating');
+        const stars = starRating.querySelectorAll('i');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.classList.remove('bx-star');
+                        s.classList.add('bxs-star');
+                        s.classList.add('active');
+                    } else {
+                        s.classList.add('bx-star');
+                        s.classList.remove('bxs-star');
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Image upload
+        const imageUpload = document.getElementById('imageUpload');
+        const fileInput = imageUpload.querySelector('input[type="file"]');
+
+        imageUpload.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Review form submission
+        document.getElementById('reviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            alert('Review submitted successfully!');
+            modal.classList.remove('active');
+            this.reset();
+            stars.forEach(star => {
+                star.classList.add('bx-star');
+                star.classList.remove('bxs-star', 'active');
+            });
+        });
+
+        // Like functionality
+        document.querySelectorAll('.review-action').forEach(action => {
+            action.addEventListener('click', function() {
+                const count = this.querySelector('span');
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('bx-like')) {
+                    icon.classList.toggle('bxs-like');
+                    count.textContent = icon.classList.contains('bxs-like') 
+                        ? parseInt(count.textContent) + 1 
+                        : parseInt(count.textContent) - 1;
+                }
+            });
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            if(confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html> 
