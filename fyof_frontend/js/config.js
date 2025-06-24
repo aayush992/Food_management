@@ -10,7 +10,7 @@ const CONFIG = {
     }
     
     // Production - Replace with your actual Railway URL
-    return 'https://YOUR-RAILWAY-APP-NAME.railway.app/api';
+    return 'foodmanagement-production.up.railway.app';
   })(),
   
   // Payment configuration
