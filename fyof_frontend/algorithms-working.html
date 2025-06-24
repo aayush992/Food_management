@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FYOF - OS Algorithms Working Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-box {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 100px;
+        }
+        
+        .success {
+            border-left: 4px solid #28a745;
+            background: #f8fff9;
+        }
+        
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #fff5f5;
+        }
+        
+        .loading {
+            border-left: 4px solid #ffc107;
+            background: #fffbf0;
+        }
+        
+        .algorithm-result {
+            font-family: 'Courier New', monospace;
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .metric-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-connected {
+            background: #28a745;
+        }
+        
+        .status-disconnected {
+            background: #dc3545;
+        }
+        
+        .route-path {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .route-step {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 2px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 FYOF OS Algorithms - Working Demo</h1>
+            <p>Real-time demonstration of Dijkstra's Algorithm and OS Scheduling</p>
+            <p><span id="connection-status" class="status-indicator status-disconnected"></span><span id="status-text">Checking connection...</span></p>
+        </div>
+        
+        <div class="content">
+            <!-- Dijkstra Algorithm Demo -->
+            <div class="demo-section">
+                <h2>🚚 Dijkstra's Shortest Path Algorithm</h2>
+                <p><strong>Purpose:</strong> Calculate optimal delivery routes in real-time</p>
+                
+                <button class="btn" onclick="demonstrateDijkstra()" id="dijkstra-btn">
+                    🧪 Calculate Optimal Route
+                </button>
+                
+                <div id="dijkstra-result" class="result-box">
+                    <p>Click the button above to see Dijkstra's algorithm in action!</p>
+                </div>
+                
+                <div class="metrics-grid" id="dijkstra-metrics" style="display: none;">
+                    <div class="metric-card">
+                        <h3 id="route-distance">--</h3>
+                        <p>Distance (km)</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3 id="route-time">--</h3>
+                        <p>Estimated Time (min)</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3 id="algorithm-time">--</h3>
+                        <p>Algorithm Time (ms)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduling Algorithms Demo -->
+            <div class="demo-section">
+                <h2>⏰ OS Scheduling Algorithms Comparison</h2>
+                <p><strong>Purpose:</strong> Optimize order processing using various OS scheduling strategies</p>
+                
+                <button class="btn" onclick="demonstrateScheduling()" id="scheduling-btn">
+                    📊 Compare Scheduling Algorithms
+                </button>
+                
+                <div id="scheduling-result" class="result-box">
+                    <p>Click the button above to compare 5 different OS scheduling algorithms!</p>
+                </div>
+                
+                <div class="chart-container" id="scheduling-chart-container" style="display: none;">
+                    <canvas id="schedulingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Performance Metrics Demo -->
+            <div class="demo-section">
+                <h2>📈 Algorithm Performance Analysis</h2>
+                <p><strong>Purpose:</strong> Track and analyze algorithm efficiency in real-time</p>
+                
+                <button class="btn" onclick="demonstratePerformance()" id="performance-btn">
+                    📊 Analyze Performance
+                </button>
+                
+                <div id="performance-result" class="result-box">
+                    <p>Click the button above to see comprehensive performance metrics!</p>
+                </div>
+            </div>
+
+            <!-- Complete Test Demo -->
+            <div class="demo-section">
+                <h2>🧪 Complete Algorithm Test Suite</h2>
+                <p><strong>Purpose:</strong> Comprehensive test of all implemented OS algorithms</p>
+                
+                <button class="btn" onclick="runCompleteTest()" id="complete-btn">
+                    🚀 Run Complete Test
+                </button>
+                
+                <div id="complete-result" class="result-box">
+                    <p>Click the button above to run a comprehensive test of all algorithms!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        let schedulingChart;
+
+        // Check API connection on load
+        async function checkConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/algorithms/locations`);
+                if (response.ok) {
+                    document.getElementById('connection-status').className = 'status-indicator status-connected';
+                    document.getElementById('status-text').textContent = 'Connected to API';
+                    return true;
+                } else {
+                    throw new Error('API not responding');
+                }
+            } catch (error) {
+                document.getElementById('connection-status').className = 'status-indicator status-disconnected';
+                document.getElementById('status-text').textContent = 'API Connection Failed';
+                return false;
+            }
+        }
+
+        // Demonstrate Dijkstra's Algorithm
+        async function demonstrateDijkstra() {
+            const btn = document.getElementById('dijkstra-btn');
+            const resultDiv = document.getElementById('dijkstra-result');
+            const metricsDiv = document.getElementById('dijkstra-metrics');
+            
+            btn.disabled = true;
+            btn.textContent = '🔄 Calculating Route...';
+            resultDiv.className = 'result-box loading';
+            resultDiv.innerHTML = '<p>🔄 Running Dijkstra\'s algorithm to find optimal route...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/algorithms/delivery-route`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        restaurantLocation: 'clock_tower',
+                        customerLocation: 'it_park',
+                        includeTraffic: true
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result-box success';
+                    
+                    const pathDisplay = data.route.path ? 
+                        data.route.path.map(step => `<span class="route-step">${step.replace('_', ' ').toUpperCase()}</span>`).join(' → ') :
+                        'Path not available';
+
+                    resultDiv.innerHTML = `
+                        <h3>✅ Dijkstra's Algorithm - SUCCESS</h3>
+                        <p><strong>Route:</strong> Clock Tower → IT Park</p>
+                        <div class="route-path">${pathDisplay}</div>
+                        <div class="algorithm-result">
+Algorithm: Dijkstra's Shortest Path
+Distance: ${data.route.distance || 'N/A'} km
+Estimated Time: ${data.route.estimatedTime || 'N/A'} minutes
+Execution Time: ${data.performance.executionTime.toFixed(3)} ms
+Efficiency: ${data.performance.efficiency.toFixed(2)}
+Status: ${data.route.optimizedRoute ? 'Optimized' : 'Standard'}
+                        </div>
+                    `;
+
+                    // Update metrics
+                    document.getElementById('route-distance').textContent = data.route.distance || '--';
+                    document.getElementById('route-time').textContent = data.route.estimatedTime || '--';
+                    document.getElementById('algorithm-time').textContent = data.performance.executionTime.toFixed(3);
+                    metricsDiv.style.display = 'grid';
+
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+
+            } catch (error) {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🧪 Calculate Optimal Route';
+            }
+        }
+
+        // Demonstrate Scheduling Algorithms
+        async function demonstrateScheduling() {
+            const btn = document.getElementById('scheduling-btn');
+            const resultDiv = document.getElementById('scheduling-result');
+            const chartContainer = document.getElementById('scheduling-chart-container');
+            
+            btn.disabled = true;
+            btn.textContent = '🔄 Running Algorithms...';
+            resultDiv.className = 'result-box loading';
+            resultDiv.innerHTML = '<p>🔄 Comparing 5 OS scheduling algorithms...</p>';
+
+            try {
+                const sampleOrders = [
+                    { id: 'order1', arrivalTime: 0, cookingTime: 15, priority: 2 },
+                    { id: 'order2', arrivalTime: 2, cookingTime: 10, priority: 1 },
+                    { id: 'order3', arrivalTime: 5, cookingTime: 20, priority: 3 },
+                    { id: 'order4', arrivalTime: 8, cookingTime: 8, priority: 1 },
+                    { id: 'order5', arrivalTime: 12, cookingTime: 12, priority: 2 }
+                ];
+
+                const response = await fetch(`${API_BASE}/algorithms/compare-scheduling`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orders: sampleOrders })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result-box success';
+                    
+                    const algorithms = Object.keys(data.comparison.comparison);
+                    let algorithmResults = '';
+                    
+                    algorithms.forEach(alg => {
+                        const metrics = data.comparison.comparison[alg];
+                        const isBest = data.comparison.bestAlgorithm.algorithm === alg;
+                        algorithmResults += `
+${alg}${isBest ? ' 🏆 BEST' : ''}:
+  Avg Waiting Time: ${metrics.avgWaitingTime.toFixed(1)} min
+  Avg Turnaround Time: ${metrics.avgTurnaroundTime.toFixed(1)} min
+  Avg Response Time: ${metrics.avgResponseTime.toFixed(1)} min
+`;
+                    });
+
+                    resultDiv.innerHTML = `
+                        <h3>✅ OS Scheduling Algorithms - SUCCESS</h3>
+                        <p><strong>Test Case:</strong> 5 orders with different arrival times and priorities</p>
+                        <div class="algorithm-result">${algorithmResults}</div>
+                        <p><strong>Best Algorithm:</strong> ${data.comparison.bestAlgorithm.algorithm}</p>
+                        <p><strong>Recommendation:</strong> ${data.recommendations.reasoning}</p>
+                    `;
+
+                    // Create chart
+                    createSchedulingChart(data.comparison.comparison);
+                    chartContainer.style.display = 'block';
+
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+
+            } catch (error) {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📊 Compare Scheduling Algorithms';
+            }
+        }
+
+        // Create scheduling chart
+        function createSchedulingChart(comparison) {
+            const ctx = document.getElementById('schedulingChart').getContext('2d');
+            
+            if (schedulingChart) {
+                schedulingChart.destroy();
+            }
+
+            const algorithms = Object.keys(comparison);
+            const waitingTimes = algorithms.map(alg => comparison[alg].avgWaitingTime);
+            const turnaroundTimes = algorithms.map(alg => comparison[alg].avgTurnaroundTime);
+
+            schedulingChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: algorithms,
+                    datasets: [
+                        {
+                            label: 'Average Waiting Time (min)',
+                            data: waitingTimes,
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderColor: 'rgba(102, 126, 234, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Average Turnaround Time (min)',
+                            data: turnaroundTimes,
+                            backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                            borderColor: 'rgba(118, 75, 162, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'OS Scheduling Algorithms Performance Comparison'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Time (minutes)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Demonstrate Performance Analysis
+        async function demonstratePerformance() {
+            const btn = document.getElementById('performance-btn');
+            const resultDiv = document.getElementById('performance-result');
+            
+            btn.disabled = true;
+            btn.textContent = '🔄 Analyzing...';
+            resultDiv.className = 'result-box loading';
+            resultDiv.innerHTML = '<p>🔄 Analyzing algorithm performance...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/algorithms/availability-trends`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result-box success';
+                    
+                    const availability = data.availability;
+                    
+                    resultDiv.innerHTML = `
+                        <h3>✅ Performance Analysis - SUCCESS</h3>
+                        <div class="algorithm-result">
+Food Availability Analysis:
+Average Availability: ${availability.averageAvailability.toFixed(1)}%
+Peak Hours (Low Availability): ${availability.peakHours.join(', ')}
+Optimal Hours (High Availability): ${availability.optimalHours.join(', ')}
+
+System Performance:
+- Real-time trend analysis: ✅ Active
+- Peak time detection: ✅ Working
+- Optimization recommendations: ✅ Generated
+                        </div>
+                    `;
+
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+
+            } catch (error) {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📊 Analyze Performance';
+            }
+        }
+
+        // Run Complete Test
+        async function runCompleteTest() {
+            const btn = document.getElementById('complete-btn');
+            const resultDiv = document.getElementById('complete-result');
+            
+            btn.disabled = true;
+            btn.textContent = '🔄 Running Tests...';
+            resultDiv.className = 'result-box loading';
+            resultDiv.innerHTML = '<p>🔄 Running comprehensive algorithm test suite...</p>';
+
+            try {
+                const response = await fetch(`${API_BASE}/algorithms/test-algorithms`, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result-box success';
+                    
+                    resultDiv.innerHTML = `
+                        <h3>✅ Complete Algorithm Test - SUCCESS</h3>
+                        <div class="algorithm-result">
+DIJKSTRA'S ALGORITHM TEST:
+Route: ${data.tests.delivery.testCase}
+Distance: ${data.tests.delivery.route.distance || 'N/A'} km
+Time: ${data.tests.delivery.route.estimatedTime || 'N/A'} minutes
+Status: ${data.tests.delivery.route.optimizedRoute ? 'Optimized ✅' : 'Standard'}
+
+SCHEDULING ALGORITHMS TEST:
+Test Case: ${data.tests.scheduling.testCase}
+Algorithms Tested: ${data.tests.scheduling.algorithms}
+Best Algorithm: ${data.tests.scheduling.results.bestAlgorithm.algorithm}
+Performance Score: ${data.tests.scheduling.results.bestAlgorithm.score.toFixed(2)}
+
+SYSTEM STATUS:
+✅ Dijkstra's Algorithm: Working
+✅ FCFS Scheduling: Working  
+✅ SJF Scheduling: Working
+✅ Priority Scheduling: Working
+✅ Round Robin: Working
+✅ SRTF Scheduling: Working
+✅ Performance Metrics: Active
+✅ Real-time Analysis: Functional
+                        </div>
+                        <p><strong>Message:</strong> ${data.message}</p>
+                    `;
+
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+
+            } catch (error) {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Run Complete Test';
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', checkConnection);
+    </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+* {
+    padding: 0px;
+    margin:0px;
+    box-sizing: border-box;
+}
+
+.section_container{
+    max-width: max-content;
+    margin: auto;
+    padding: 5rem 1rem;
+}
+
+.section_subheader{
+    margin-bottom: 5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color:darkgray;
+}
+
+.section_header{
+    font-size: 3rem;
+    font-weight: 800;
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
+    color: var(--text-dar;);
+    
+}
+
+.section_description {
+    margin-top: 1rem;
+        color:lightskyblue;
+}
+
+.btn{
+    padding: .75rem 2rem;
+    font-size: 1rem;
+    color: white;
+    background-color: lightgrey;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    cursor:pointer;
+}
+
+.section_nav {
+    margin-left: auto;
+    display:flex;
+    align-items:center;
+    gap: 1rem;
+
+}
+
+.section_nav span{
+    padding: 10px 15px;
+    font-size: 1.25rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.section_nav span:hover {
+    background-color: lightgrey;
+
+}
+
+.logo{
+    display: flex;
+    align-items: center;
+   
+}
+.logo div {
+padding-inline: 12px;
+font-size: 2rem;
+}
+
+img, video{
+    width: 100%;
+    display: flex;
+}
+a{
+    text-decoration: none;
+}
+
+html,
+body{
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: "poppins", sans-serif;
+}
+
+nav{
+    position: fixed;
+    isolation: isolate;
+    width: 100%;
+    z-index: 9;
+}
+.nav_bar{
+    position: relative;
+    isolation: isolate;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.nav_header{
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: lightyellow;
+}
+
+.nav_menu_btn{
+    font: size 1.5em; 
+    color: darkgray;
+    cursor:pointer;
+}
+.nav_links {
+    list-style:none;
+    position: absolute;
+    padding: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    background-color: white;
+    transform: translateY(-100%);
+    transition: 0.5s;
+    z-index:-1;
+}
+
+
+nav{
+    position: static;
+    padding-inline:1rem ;
+    background-color: linen;
+    margin: auto;
+}
+.nav_bar{
+    max-width: max-content;
+    margin: auto;
+    padding: 0px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 5px;
+    transform: translateY(50%);
+
+}
+.nav_header{
+    padding: 0px;
+    background-color: transparent;
+
+}
+
+.nav_menu_btn{
+    display: none;
+}
+
+.nav_links{
+    width: fit-content;
+    padding:0px;
+    position:static;
+    flex-direction: row;
+    transform: none;
+    background-color: transparent;
+}
+.logo{
+    padding-right: 800px;
+}

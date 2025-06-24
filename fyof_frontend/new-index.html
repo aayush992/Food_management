@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FYOF - Find Your Own Food</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Navigation Styles */
+        .nav_bar {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav_header {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav_logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav_logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav_menu_btn {
+            display: none;
+        }
+
+        .nav_links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav_links li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav_links li a:hover {
+            color: #ff4d4d;
+        }
+
+        /* Home Carousel Section */
+        .home {
+            padding-top: 80px;
+            background: #f9f9f9;
+        }
+
+        .home .item {
+            position: relative;
+        }
+
+        .home .item img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+        }
+
+        .home .item .text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .home .item .text h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Booking Section */
+        .book {
+            padding: 4rem 2rem;
+            background: #fff;
+        }
+
+        .book .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .book .text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .book .text h1 span {
+            color: #ff4d4d;
+        }
+
+        .book .form {
+            flex: 1;
+        }
+
+        .book .form .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .book .form input {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .book .form input[type="submit"] {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .book .form input[type="submit"]:hover {
+            background: #ff3333;
+        }
+
+        /* About Section */
+        .about {
+            padding: 4rem 2rem;
+            background: #f9f9f9;
+        }
+
+        .about .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .about .left {
+            flex: 1;
+        }
+
+        .about .right {
+            flex: 1;
+        }
+
+        .about .heading h1 {
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .about .heading h2 {
+            font-size: 2rem;
+            color: #ff4d4d;
+            margin-bottom: 1rem;
+        }
+
+        .about p {
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .primary-btn {
+            padding: 1rem 2rem;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .primary-btn:hover {
+            background: #ff3333;
+        }
+
+        /* Outlets Section */
+        .rooms {
+            padding: 4rem 2rem;
+            background: #fff;
+        }
+
+        .rooms .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .rooms .heading {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .rooms .heading h1 {
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .rooms .heading h2 {
+            font-size: 2rem;
+            color: #ff4d4d;
+            margin-bottom: 1rem;
+        }
+
+        .rooms .content .items {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .rooms .content .items img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .rooms .content .items .text {
+            padding: 1rem 0;
+        }
+
+        .rooms .content .items .rate {
+            display: flex;
+            gap: 0.5rem;
+            color: #ffd700;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 4rem 2rem;
+            background-color: #f9f9f9;
+        }
+
+        .gallery-section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #333;
+            font-size: 2.5rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay-content {
+            text-align: center;
+            color: white;
+            padding: 1rem;
+        }
+
+        .gallery-overlay-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-overlay-content p {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .nav_menu_btn {
+                display: block;
+            }
+
+            .nav_links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #fff;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav_links.active {
+                display: flex;
+            }
+
+            .home .item img {
+                height: 400px;
+            }
+
+            .home .item .text h1 {
+                font-size: 2rem;
+            }
+
+            .book .container,
+            .about .container {
+                flex-direction: column;
+            }
+
+            .gallery-section {
+                padding: 2rem 1rem;
+            }
+
+            .gallery-section h2 {
+                font-size: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav_bar">
+            <div class="nav_header">
+                <div class="logo nav_logo">
+                    <div><img src="images/logo.png" alt="FYOFlogo"></div>
+                    <div class="nav_menu_btn" id="menu-btn">
+                        <i class="fas fa-bars" style="font-size: 24px; cursor: pointer"></i>
+                    </div>
+                </div>
+                <ul class="nav_links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="service.html">Services</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><i class="fa fa-search"></i></li>
+                    <li><button class="primary-btn" onclick="window.location.href='login.html'">BOOK NOW</button></li>
+                    <li><button class="primary-btn" id="logoutBtn">LOGOUT</button></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section with Carousel -->
+    <section class="home">
+        <div class="content">
+            <div class="owl-carousel owl-theme">
+                <div class="item">
+                                        <img src="images/food1.png" alt="Delicious Food">                    <div class="text">                        <h1>Welcome to FYOF</h1>                        <p>Find Your Own Food - Your Ultimate Food Discovery Platform</p>                    </div>                </div>                <div class="item">                    <img src="images/food3.jpg" alt="Restaurant Interior">                    <div class="text">                        <h1>Explore Local Cuisine</h1>                        <p>Discover amazing food spots near you</p>                    </div>                </div>                <div class="item">                    <img src="images/food2.webp.jpg" alt="Street Food">
+                    <div class="text">
+                        <h1>Street Food Paradise</h1>
+                        <p>Experience the best of local street food</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section class="book">
+        <div class="container">
+            <div class="text">
+                <h1><span>Book</span> Your Meal</h1>
+            </div>
+            <div class="form">
+                <form class="grid">
+                    <input type="date" placeholder="Arrival Date">
+                    <input type="number" placeholder="Adults">
+                    <input type="number" placeholder="Children">
+                    <input type="submit" value="CHECK AVAILABILITY">
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="left">
+                <div class="heading">
+                    <h1>WELCOME</h1>
+                    <h2>To FYOF</h2>
+                </div>
+                <p>At FYOF – Find Your Own Food, we believe great food shouldn't be hard to find. Our platform connects food lovers with nearby culinary spots of all kinds—whether you're craving gourmet dishes at a restaurant, a cozy café vibe, or the unbeatable flavor of a roadside food stall. FYOF helps you explore your local food scene based on your location and budget, offering a simple, user-friendly way to discover hidden gems and popular favorites alike. Whether you're a student, a traveler, or just someone hungry for something new, FYOF makes your food journey easier and more exciting.</p>
+                <button class="primary-btn">ABOUT US</button>
+            </div>
+            <div class="right">
+                <img src="images/about.png" alt="">
+            </div>
+        </div>
+    </section>
+
+    <!-- Outlets Section -->
+    <section class="rooms">
+        <div class="container">
+            <div class="heading">
+                <h1>EXPLORE</h1>
+                <h2>Our Outlets</h2>
+                <p>From high-end restaurants and buzzing cafes to budget-friendly food stalls and local roadside gems, 
+                    FYOF brings you a wide range of food outlets all in one place.
+                    We've curated listings that cater to every taste and wallet—making it easier than ever to discover nearby options that suit your cravings and budget.
+                    Whether you're looking for a quick bite or a full dining experience, 
+                    explore a variety of trusted food spots recommended by real users and updated regularly to keep your choices fresh and relevant.</p>
+            </div>
+            <div class="content">
+                <div class="owl-carousel owl-carousel1 owl-theme">
+                    <div class="items">
+                        <div class="image">
+                            <img src="images/outlet1.jpg" alt="Outlet 1">
+                        </div>
+                        <div class="text">
+                            <h2>Fine Dining Restaurant</h2>
+                            <div class="rate">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <p>Discover a wide range of food spots near you—from restaurants and cafés to street food and local stalls. FYOF makes it easy to find places that fit your taste and budget.</p>
+                            <div class="button">
+                                <button class="primary-btn">BOOK NOW</button>
+                                <h3>50 <span><br> Starting price </span></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add more outlet items here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <h2>Our Food Gallery</h2>
+        <div class="gallery-grid">
+            <!-- Gallery items will be dynamically added here -->
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const navLinks = document.getElementById('nav-links');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Home carousel
+        $('.owl-carousel').owlCarousel({
+            loop: true,
+            margin: 0,
+            nav: true,
+            dots: false,
+            navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
+            responsive: {
+                0: { items: 1 },
+                768: { items: 1 },
+                1000: { items: 1 }
+            }
+        });
+
+        // Outlets carousel
+        $('.owl-carousel1').owlCarousel({
+            loop: true,
+            margin: 20,
+            nav: true,
+            dots: false,
+            navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
+            responsive: {
+                0: { items: 1 },
+                768: { items: 2 },
+                1000: { items: 3 }
+            }
+        });
+
+        // Gallery images
+        const galleryImages = [
+            { src: 'images/gallery1.jpg', alt: 'Gallery Image 1' },
+            { src: 'images/gallery2.jpg', alt: 'Gallery Image 2' },
+            { src: 'images/gallery3.webp', alt: 'Gallery Image 3' },
+            { src: 'images/gallery4.jpg', alt: 'Gallery Image 4' },
+            { src: 'images/gallery5.jpg', alt: 'Gallery Image 5' },
+            { src: 'images/gallery6.jpg', alt: 'Gallery Image 6' },
+            { src: 'images/gallery8.webp', alt: 'Gallery Image 8' },
+            { src: 'images/food1.png', alt: 'Food Image 1' },
+            { src: 'images/food2.webp.jpg', alt: 'Food Image 2' },
+            { src: 'images/food3.jpg', alt: 'Food Image 3' }
+        ];
+
+        // Create gallery items
+        const galleryGrid = document.querySelector('.gallery-grid');
+        galleryImages.forEach((image, index) => {
+            const galleryItem = document.createElement('div');
+            galleryItem.className = 'gallery-item';
+            galleryItem.innerHTML = `
+                <img src="${image.src}" alt="${image.alt}" loading="lazy">
+                <div class="gallery-overlay">
+                    <div class="gallery-overlay-content">
+                        <h3>Delicious Food</h3>
+                        <p>Click to view details</p>
+                    </div>
+                </div>
+            `;
+            galleryGrid.appendChild(galleryItem);
+        });
+
+        // Authentication handling
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        });
+
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('token');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const bookNowBtn = document.querySelector('button.primary-btn:not(#logoutBtn)');
+            
+            if (token) {
+                logoutBtn.style.display = 'block';
+                bookNowBtn.onclick = function() {
+                    window.location.href = 'dashboard.html';
+                };
+                bookNowBtn.textContent = 'DASHBOARD';
+            } else {
+                logoutBtn.style.display = 'none';
+                bookNowBtn.onclick = function() {
+                    window.location.href = 'login.html';
+                };
+                bookNowBtn.textContent = 'BOOK NOW';
+            }
+        });
+    </script>
+</body>
+</html> 

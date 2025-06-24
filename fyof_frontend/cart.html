@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add to Cart</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #004080;
+      margin-bottom: 25px;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .cart {
+      margin-top: 25px;
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .cart p {
+      margin: 5px 0;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background-color: #002c5c;
+    }
+  </style>
+</head>
+<body>
+
+  
+<div class="container">
+  <h2>Add to Cart</h2>
+
+  <label for="item">Select Item:</label>
+  <select id="item">
+    <option value="">--Select Item--</option>
+  </select>
+
+  <button onclick="addToCart()">Add to Cart</button>
+
+  <div class="cart" id="cart">
+    <h3>Cart Summary:</h3>
+    <div id="cartItems"></div>
+    <p><strong>Total: ₹<span id="totalAmount">0</span></strong></p>
+  </div>
+
+  <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+</div>
+
+<script>
+  const userId = localStorage.getItem('userId');
+  if (!userId) {
+    alert("You must log in to access your cart.");
+    window.location.href = 'login.html';
+  }
+</script>
+
+<script>
+  const allItems = [
+    { name: "Paneer Butter Masala", price: 250 },
+    { name: "Dal Makhani", price: 200 },
+    { name: "Aloo Gobi", price: 180 },
+    { name: "Chicken Biryani", price: 300 },
+    { name: "Butter Chicken", price: 320 },
+    { name: "Mutton Curry", price: 350 },
+    { name: "Cold Coffee", price: 120 },
+    { name: "Sweet Lassi", price: 90 },
+    { name: "Fresh Lime Soda", price: 80 }
+  ];
+
+  const cart = [];
+  let total = 0;
+
+  function loadItems() {
+    const itemSelect = document.getElementById("item");
+    allItems.forEach((item, index) => {
+      const option = document.createElement("option");
+      option.value = index;
+      option.textContent = item.name + " - ₹" + item.price;
+      itemSelect.appendChild(option);
+    });
+  }
+
+ function addToCart() {
+  const itemIndex = document.getElementById("item").value;
+
+  if (itemIndex !== "") {
+    const selectedItem = allItems[parseInt(itemIndex)];
+
+    // Send to backend
+    fetch('http://localhost:5000/api/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: "replace_with_user_id",  // Use actual user ID from login
+        item: selectedItem
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      cart.push(selectedItem);
+      total += selectedItem.price;
+      updateCartDisplay();
+    })
+    .catch(err => console.error('Error:', err));
+  } else {
+    alert("Please select an item!");
+  }
+}
+
+
+  function updateCartDisplay() {
+    const cartItems = document.getElementById("cartItems");
+    const totalAmount = document.getElementById("totalAmount");
+
+    cartItems.innerHTML = "";
+    cart.forEach((item, index) => {
+      const itemElement = document.createElement("p");
+      itemElement.textContent = (index + 1) + ". " + item.name + " - ₹" + item.price;
+      cartItems.appendChild(itemElement);
+    });
+
+    totalAmount.textContent = total;
+  }
+
+  function goToCheckout() {
+  fetch('http://localhost:5000/api/cart/checkout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userId: "replace_with_user_id", // Same as above
+      paymentMethod: "Online"         // Or "Cash on Delivery"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert("Order placed successfully!");
+    window.location.href = "service.html";
+  })
+  .catch(err => console.error('Checkout error:', err));
+}
+
+
+  // Load items on page load
+  window.onload = loadItems;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FYOF Database Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            opacity: 0.9;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f1f3f4;
+        }
+        
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-confirmed { background: #e2e3e5; color: #383d41; }
+        .status-paid { background: #d1ecf1; color: #0c5460; }
+        .status-failed { background: #f8d7da; color: #721c24; }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗄️ FYOF Database Viewer</h1>
+            <p>Real-time view of your orders, payments, and cart data</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">📊 Overview</button>
+            <button class="tab" onclick="showTab('orders')">📦 Orders</button>
+            <button class="tab" onclick="showTab('payments')">💳 Payments</button>
+            <button class="tab" onclick="showTab('carts')">🛒 Carts</button>
+        </div>
+        
+        <div class="content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <button class="refresh-btn" onclick="loadOverview()">🔄 Refresh Data</button>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="loading">Loading statistics...</div>
+                </div>
+                <div id="overview-charts"></div>
+            </div>
+            
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <button class="refresh-btn" onclick="loadOrders()">🔄 Refresh Orders</button>
+                <div id="orders-content">
+                    <div class="loading">Loading orders...</div>
+                </div>
+            </div>
+            
+            <!-- Payments Tab -->
+            <div id="payments" class="tab-content">
+                <button class="refresh-btn" onclick="loadPayments()">🔄 Refresh Payments</button>
+                <div id="payments-content">
+                    <div class="loading">Loading payments...</div>
+                </div>
+            </div>
+            
+            <!-- Carts Tab -->
+            <div id="carts" class="tab-content">
+                <button class="refresh-btn" onclick="loadCarts()">🔄 Refresh Carts</button>
+                <div id="carts-content">
+                    <div class="loading">Loading carts...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Load data for the selected tab
+            switch(tabName) {
+                case 'overview':
+                    loadOverview();
+                    break;
+                case 'orders':
+                    loadOrders();
+                    break;
+                case 'payments':
+                    loadPayments();
+                    break;
+                case 'carts':
+                    loadCarts();
+                    break;
+            }
+        }
+
+        // Load overview statistics
+        async function loadOverview() {
+            try {
+                const [outlets, payments, orders] = await Promise.all([
+                    fetch(`${API_BASE}/outlets`).then(r => r.json()),
+                    fetch(`${API_BASE}/payments`).then(r => r.json()),
+                    fetch(`${API_BASE}/orders/user/6859e05249ff98fbdc8fd032`).then(r => r.json())
+                ]);
+
+                const statsGrid = document.getElementById('stats-grid');
+                statsGrid.innerHTML = `
+                    <div class="stat-card">
+                        <h3>${outlets.length}</h3>
+                        <p>Total Outlets</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${payments.pagination?.totalPayments || 0}</h3>
+                        <p>Total Payments</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>₹${payments.payments?.reduce((sum, p) => sum + p.amount, 0) || 0}</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${payments.payments?.filter(p => p.paymentStatus === 'completed').length || 0}</h3>
+                        <p>Successful Payments</p>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('stats-grid').innerHTML = `
+                    <div class="error">Error loading overview: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load orders
+        async function loadOrders() {
+            try {
+                // Get a sample user's orders
+                const response = await fetch(`${API_BASE}/orders/user/6859e05249ff98fbdc8fd032`);
+                const data = await response.json();
+                
+                const ordersContent = document.getElementById('orders-content');
+                
+                if (data.orders && data.orders.length > 0) {
+                    ordersContent.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Outlet</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Payment Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.orders.map(order => `
+                                    <tr>
+                                        <td>${order._id.substring(0, 8)}...</td>
+                                        <td>${order.customerId?.name || 'Unknown'}</td>
+                                        <td>${order.outletId?.name || 'Unknown'}</td>
+                                        <td>₹${order.totalAmount}</td>
+                                        <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                                        <td><span class="status-badge status-${order.paymentStatus}">${order.paymentStatus}</span></td>
+                                        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    ordersContent.innerHTML = '<p>No orders found for this user. Try checking other users or the database directly.</p>';
+                }
+            } catch (error) {
+                document.getElementById('orders-content').innerHTML = `
+                    <div class="error">Error loading orders: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load payments
+        async function loadPayments() {
+            try {
+                const response = await fetch(`${API_BASE}/payments`);
+                const data = await response.json();
+                
+                const paymentsContent = document.getElementById('payments-content');
+                
+                if (data.payments && data.payments.length > 0) {
+                    paymentsContent.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Payment ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Transaction ID</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.payments.map(payment => `
+                                    <tr>
+                                        <td>${payment._id.substring(0, 8)}...</td>
+                                        <td>${payment.customerId?.name || 'Unknown'}</td>
+                                        <td>₹${payment.amount}</td>
+                                        <td>${payment.paymentMethod.toUpperCase()}</td>
+                                        <td><span class="status-badge status-${payment.paymentStatus}">${payment.paymentStatus}</span></td>
+                                        <td>${payment.transactionId || 'N/A'}</td>
+                                        <td>${new Date(payment.paymentDate).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    paymentsContent.innerHTML = '<p>No payments found.</p>';
+                }
+            } catch (error) {
+                document.getElementById('payments-content').innerHTML = `
+                    <div class="error">Error loading payments: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load carts
+        async function loadCarts() {
+            try {
+                // Get a sample user's cart
+                const response = await fetch(`${API_BASE}/cart/6859e05249ff98fbdc8fd032`);
+                const data = await response.json();
+                
+                const cartsContent = document.getElementById('carts-content');
+                
+                if (data.items && data.items.length > 0) {
+                    cartsContent.innerHTML = `
+                        <div class="stat-card" style="margin-bottom: 20px;">
+                            <h3>₹${data.total}</h3>
+                            <p>Cart Total</p>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.items.map(item => `
+                                    <tr>
+                                        <td>${item.itemName}</td>
+                                        <td>₹${item.price}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>₹${item.price * item.quantity}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    cartsContent.innerHTML = '<p>No items in cart for this user.</p>';
+                }
+            } catch (error) {
+                document.getElementById('carts-content').innerHTML = `
+                    <div class="error">Error loading carts: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOverview();
+        });
+    </script>
+</body>
+</html>

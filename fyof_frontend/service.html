@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Service Form</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #004080;
+      margin-bottom: 25px;
+    }
+
+    .dropdown {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: white;
+      cursor: pointer;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      width: 100%;
+      background: white;
+      border: 1px solid #ccc;
+      border-top: none;
+      z-index: 1;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .dropdown-content label {
+      display: block;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .dropdown.active .dropdown-content {
+      display: block;
+    }
+
+    .section {
+      display: none;
+    }
+
+    #upiInput {
+      margin-top: 10px;
+    }
+
+    #upiInput input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 25px;
+      background-color: #004080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #002c5c;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Choose Your Options</h2>
+
+  <!-- Service Type -->
+  <div class="dropdown" id="dropdownService">
+    <div class="dropdown-btn" onclick="toggleDropdown('dropdownService')">-- Select Service Type --</div>
+    <div class="dropdown-content">
+      <label><input type="radio" name="service" value="Dine" onchange="handleServiceChange()"> Dine</label>
+      <label><input type="radio" name="service" value="Home Delivery" onchange="handleServiceChange()"> Home Delivery</label>
+    </div>
+  </div>
+
+  <!-- Dine Options -->
+  <div class="dropdown section" id="dropdownDine">
+    <div class="dropdown-btn" onclick="toggleDropdown('dropdownDine')">-- Select Dine Option --</div>
+    <div class="dropdown-content">
+      <label><input type="radio" name="dine" value="Book Your Table" onchange="showDineOptions()"> Book Your Table</label>
+      <label><input type="radio" name="dine" value="Book Your Meal" onchange="showDineOptions()"> Book Your Meal</label>
+    </div>
+  </div>
+
+  <!-- Dine Payment Options -->
+  <div class="dropdown section" id="dropdownDinePayment">
+    <div class="dropdown-btn" onclick="toggleDropdown('dropdownDinePayment')">-- Select Dine Payment Option --</div>
+    <div class="dropdown-content">
+      <label><input type="radio" name="dinePayment" value="Pay Online" onchange="handleDinePayment()"> Pay Online</label>
+      <label><input type="radio" name="dinePayment" value="Pay at Arrival" onchange="handleDinePayment()"> Pay at Arrival</label>
+    </div>
+  </div>
+
+  <!-- Home Delivery Options -->
+  <div class="dropdown section" id="dropdownDelivery">
+    <div class="dropdown-btn" onclick="toggleDropdown('dropdownDelivery')">-- Select Delivery Option --</div>
+    <div class="dropdown-content">
+      <label><input type="radio" name="delivery" value="Cash on Delivery" onchange="handleDeliveryChange()"> Cash on Delivery</label>
+      <label><input type="radio" name="delivery" value="Online Pay" onchange="handleDeliveryChange()"> Online Pay</label>
+    </div>
+  </div>
+
+  <!-- Online Payment Method (Common) -->
+  <div class="dropdown section" id="dropdownOnlinePay">
+    <div class="dropdown-btn" onclick="toggleDropdown('dropdownOnlinePay')">-- Select Online Pay Method --</div>
+    <div class="dropdown-content">
+      <label><input type="radio" name="onlinePay" value="UPI App" onchange="toggleUPI(true)"> UPI App</label>
+      <label><input type="radio" name="onlinePay" value="UPI ID" onchange="toggleUPI(true)"> UPI ID</label>
+    </div>
+  </div>
+
+  <!-- UPI Input -->
+  <div id="upiInput" style="display:none;">
+    <label>Enter UPI ID:</label>
+    <input type="text" placeholder="yourupi@bank" />
+  </div>
+
+  <button id="submitButton" onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+  function toggleDropdown(id) {
+    document.querySelectorAll('.dropdown').forEach(d => {
+      if (d.id !== id) d.classList.remove('active');
+    });
+    const dropdown = document.getElementById(id);
+    dropdown.classList.toggle("active");
+  }
+
+  function handleServiceChange() {
+    const selected = document.querySelector('input[name="service"]:checked')?.value;
+    document.querySelector("#dropdownService .dropdown-btn").textContent = selected;
+
+    document.getElementById('dropdownDine').style.display = selected === "Dine" ? 'block' : 'none';
+    document.getElementById('dropdownDinePayment').style.display = 'none';
+    document.getElementById('dropdownDelivery').style.display = selected === "Home Delivery" ? 'block' : 'none';
+    document.getElementById('dropdownOnlinePay').style.display = 'none';
+    document.getElementById('upiInput').style.display = 'none';
+    document.getElementById('submitButton').textContent = "Submit";
+
+    closeAllDropdowns();
+  }
+
+  function showDineOptions() {
+    document.querySelector("#dropdownDine .dropdown-btn").textContent =
+      document.querySelector('input[name="dine"]:checked').value;
+    document.getElementById("dropdownDinePayment").style.display = "block";
+    document.getElementById('dropdownOnlinePay').style.display = 'none';
+    document.getElementById('upiInput').style.display = 'none';
+    closeAllDropdowns();
+  }
+
+  function handleDinePayment() {
+    const selected = document.querySelector('input[name="dinePayment"]:checked')?.value;
+    document.querySelector("#dropdownDinePayment .dropdown-btn").textContent = selected;
+
+    if (selected === "Pay Online") {
+      document.getElementById('dropdownOnlinePay').style.display = 'block';
+    } else {
+      document.getElementById('dropdownOnlinePay').style.display = 'none';
+      document.getElementById('upiInput').style.display = 'none';
+    }
+
+    closeAllDropdowns();
+  }
+
+  function handleDeliveryChange() {
+    const selected = document.querySelector('input[name="delivery"]:checked')?.value;
+    document.querySelector("#dropdownDelivery .dropdown-btn").textContent = selected;
+
+    if (selected === "Online Pay") {
+      document.getElementById('dropdownOnlinePay').style.display = 'block';
+    } else {
+      document.getElementById('dropdownOnlinePay').style.display = 'none';
+      document.getElementById('upiInput').style.display = 'none';
+    }
+
+    if (selected === "Cash on Delivery") {
+      document.getElementById('submitButton').textContent = "Proceed with Cash on Delivery";
+    } else {
+      document.getElementById('submitButton').textContent = "Submit";
+    }
+
+    closeAllDropdowns();
+  }
+
+  function toggleUPI(show) {
+    const selected = document.querySelector('input[name="onlinePay"]:checked')?.value;
+    document.querySelector("#dropdownOnlinePay .dropdown-btn").textContent = selected;
+    document.getElementById("upiInput").style.display = show ? "block" : "none";
+    closeAllDropdowns();
+  }
+
+  function submitForm() {
+    alert("Form submitted!");
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+  }
+
+  window.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+      closeAllDropdowns();
+    }
+  });
+
+  // Authentication check
+  window.addEventListener('load', function() {
+      const token = localStorage.getItem('token');
+      const userRole = localStorage.getItem('userRole');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const bookNowBtn = document.querySelector('button.primary-btn:not(#logoutBtn)');
+
+      if (token && bookNowBtn) {
+          if (logoutBtn) logoutBtn.style.display = 'block';
+
+          // Route based on user role
+          if (userRole === 'vendor') {
+              bookNowBtn.onclick = function() {
+                  window.location.href = 'dashboard.html'; // Vendor dashboard
+              };
+              bookNowBtn.textContent = 'VENDOR DASHBOARD';
+          } else {
+              bookNowBtn.onclick = function() {
+                  window.location.href = 'user-dashboard.html'; // User dashboard
+              };
+              bookNowBtn.textContent = 'MY ACCOUNT';
+          }
+      } else if (bookNowBtn) {
+          if (logoutBtn) logoutBtn.style.display = 'none';
+          bookNowBtn.onclick = function() {
+              window.location.href = 'login.html';
+          };
+          bookNowBtn.textContent = 'BOOK NOW';
+      }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - FYOF</title>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="images/logo.png" alt="FYOF logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="user-dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">My Account</span>
+                </a>
+            </li>
+            <li>
+                <a href="orders.html">
+                    <i class='bx bxs-cart'></i>
+                    <span class="text">My Orders</span>
+                </a>
+            </li>
+            <li>
+                <a href="booking.html">
+                    <i class='bx bxs-calendar'></i>
+                    <span class="text">Book Meal</span>
+                </a>
+            </li>
+            <li>
+                <a href="menu.html">
+                    <i class='bx bxs-food-menu'></i>
+                    <span class="text">Browse Menu</span>
+                </a>
+            </li>
+            <li>
+                <a href="reviews.html">
+                    <i class='bx bxs-star'></i>
+                    <span class="text">My Reviews</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search restaurants...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="cart.html" class="notification">
+                <i class='bx bxs-cart'></i>
+                <span class="num">2</span>
+            </a>
+            <a href="profile.html" class="profile">
+                <img src="images/person1.jpg">
+            </a>
+        </nav>
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>My Account</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="index.html">Home</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">My Account</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <ul class="box-info">
+                <li>
+                    <i class='bx bxs-cart-alt'></i>
+                    <span class="text">
+                        <h3>12</h3>
+                        <p>Orders Placed</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-heart'></i>
+                    <span class="text">
+                        <h3>5</h3>
+                        <p>Favorite Restaurants</p>
+                    </span>
+                </li>
+                <li>
+                    <i class='bx bxs-star'></i>
+                    <span class="text">
+                        <h3>8</h3>
+                        <p>Reviews Given</p>
+                    </span>
+                </li>
+            </ul>
+
+            <div class="table-data">
+                <div class="order">
+                    <div class="head">
+                        <h3>Recent Orders</h3>
+                        <i class='bx bx-search'></i>
+                        <i class='bx bx-filter'></i>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Restaurant</th>
+                                <th>Order Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>Spice Garden</p>
+                                </td>
+                                <td>15-03-2024</td>
+                                <td>₹720</td>
+                                <td><span class="status completed">Delivered</span></td>
+                                <td>
+                                    <button class="action-btn">Reorder</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Pizza Palace</p>
+                                </td>
+                                <td>14-03-2024</td>
+                                <td>₹450</td>
+                                <td><span class="status process">On the way</span></td>
+                                <td>
+                                    <button class="action-btn">Track</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>The Grand Kitchen</p>
+                                </td>
+                                <td>13-03-2024</td>
+                                <td>₹1200</td>
+                                <td><span class="status completed">Delivered</span></td>
+                                <td>
+                                    <button class="action-btn">Review</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="todo">
+                    <div class="head">
+                        <h3>Favorite Restaurants</h3>
+                        <i class='bx bx-plus'></i>
+                    </div>
+                    <ul class="todo-list">
+                        <li class="completed">
+                            <div class="restaurant-item">
+                                <img src="images/restaurant1.jpg" alt="Restaurant">
+                                <div class="restaurant-info">
+                                    <h4>Spice Garden</h4>
+                                    <p>Indian • 4.5 ★</p>
+                                </div>
+                            </div>
+                            <button class="order-btn">Order Now</button>
+                        </li>
+                        <li class="completed">
+                            <div class="restaurant-item">
+                                <img src="images/restaurant2.jpg" alt="Restaurant">
+                                <div class="restaurant-info">
+                                    <h4>Pizza Palace</h4>
+                                    <p>Italian • 4.3 ★</p>
+                                </div>
+                            </div>
+                            <button class="order-btn">Order Now</button>
+                        </li>
+                        <li class="completed">
+                            <div class="restaurant-item">
+                                <img src="images/restaurant3.jpg" alt="Restaurant">
+                                <div class="restaurant-info">
+                                    <h4>The Grand Kitchen</h4>
+                                    <p>Multi-cuisine • 4.7 ★</p>
+                                </div>
+                            </div>
+                            <button class="order-btn">Order Now</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+        });
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        });
+
+        // Check authentication and role on page load
+        window.addEventListener('load', function() {
+            const userRole = localStorage.getItem('userRole');
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('Please login to access this page');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            if (userRole === 'vendor') {
+                alert('Access denied. This page is for customers only.');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+        });
+
+        // Handle action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const action = this.textContent.toLowerCase();
+                const row = this.closest('tr');
+                const restaurant = row.querySelector('td:first-child p').textContent;
+
+                switch(action) {
+                    case 'reorder':
+                        // Add reorder logic
+                        break;
+                    case 'track':
+                        window.location.href = `track-order.html?restaurant=${encodeURIComponent(restaurant)}`;
+                        break;
+                    case 'review':
+                        window.location.href = `reviews.html?restaurant=${encodeURIComponent(restaurant)}`;
+                        break;
+                }
+            });
+        });
+
+        // Handle order buttons
+        document.querySelectorAll('.order-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const restaurant = this.closest('li').querySelector('.restaurant-info h4').textContent;
+                window.location.href = `menu.html?restaurant=${encodeURIComponent(restaurant)}`;
+            });
+        });
+    </script>
+</body>
+</html> 

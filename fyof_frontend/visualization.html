@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FYOF - OS Algorithm Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .metric-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .metric-card p {
+            opacity: 0.9;
+        }
+        
+        .algorithm-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .algorithm-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .algorithm-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .algorithm-card.best {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(24, 1fr);
+            gap: 2px;
+            margin: 20px 0;
+        }
+        
+        .heatmap-cell {
+            aspect-ratio: 1;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .route-visualization {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .route-step {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .route-step .step-number {
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 FYOF OS Algorithm Visualization</h1>
+            <p>Real-time visualization of Dijkstra's Algorithm and Scheduling Algorithms</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('delivery')">🚚 Delivery Routes</button>
+            <button class="tab" onclick="showTab('scheduling')">⏰ Order Scheduling</button>
+            <button class="tab" onclick="showTab('performance')">📈 Performance Metrics</button>
+            <button class="tab" onclick="showTab('heatmaps')">🔥 Peak Time Analysis</button>
+        </div>
+        
+        <div class="content">
+            <!-- Delivery Routes Tab -->
+            <div id="delivery" class="tab-content active">
+                <h2>🚚 Dijkstra's Algorithm - Delivery Route Optimization</h2>
+                
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3 id="avg-delivery-time">--</h3>
+                        <p>Average Delivery Time (min)</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3 id="route-efficiency">--</h3>
+                        <p>Route Efficiency</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3 id="total-calculations">--</h3>
+                        <p>Total Route Calculations</p>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="testDeliveryRoute()">🧪 Test Route Calculation</button>
+                <button class="btn" onclick="loadDeliveryTrends()">📊 Load Trends</button>
+                
+                <div class="chart-container">
+                    <canvas id="deliveryChart"></canvas>
+                </div>
+                
+                <div id="route-details" class="route-visualization" style="display: none;">
+                    <h3>📍 Route Details</h3>
+                    <div id="route-steps"></div>
+                </div>
+            </div>
+            
+            <!-- Scheduling Tab -->
+            <div id="scheduling" class="tab-content">
+                <h2>⏰ OS Scheduling Algorithms Comparison</h2>
+                
+                <button class="btn" onclick="testSchedulingAlgorithms()">🧪 Test Scheduling</button>
+                <button class="btn" onclick="compareAllAlgorithms()">📊 Compare All</button>
+                
+                <div class="algorithm-comparison" id="algorithm-comparison">
+                    <!-- Algorithm cards will be populated here -->
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="schedulingChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="ganttChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Performance Tab -->
+            <div id="performance" class="tab-content">
+                <h2>📈 Algorithm Performance Metrics</h2>
+                
+                <button class="btn" onclick="loadPerformanceMetrics()">🔄 Refresh Metrics</button>
+                <button class="btn" onclick="analyzeEfficiency()">📊 Analyze Efficiency</button>
+                
+                <div class="metrics-grid" id="performance-metrics">
+                    <!-- Performance metrics will be populated here -->
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="algorithmComparisonChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Heatmaps Tab -->
+            <div id="heatmaps" class="tab-content">
+                <h2>🔥 Peak Time Analysis & Food Availability</h2>
+                
+                <button class="btn" onclick="loadAvailabilityTrends()">🔄 Load Availability Data</button>
+                <button class="btn" onclick="generateHeatmap()">🔥 Generate Heatmap</button>
+                
+                <h3>📊 Hourly Food Availability</h3>
+                <div class="heatmap" id="availability-heatmap">
+                    <!-- Heatmap cells will be populated here -->
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="availabilityChart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="peakTimeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        
+        let deliveryChart, schedulingChart, performanceChart, availabilityChart;
+
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Test delivery route calculation
+        async function testDeliveryRoute() {
+            try {
+                console.log('Testing delivery route with API_BASE:', API_BASE);
+
+                const response = await fetch(`${API_BASE}/algorithms/delivery-route`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        restaurantLocation: 'clock_tower',
+                        customerLocation: 'it_park',
+                        includeTraffic: true
+                    })
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (data.success) {
+                    displayRouteDetails(data.route, data.performance);
+                    updateDeliveryMetrics(data);
+                    showSuccess('Route calculated successfully!');
+                } else {
+                    showError('Failed to calculate route: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error testing delivery route:', error);
+                showError('Error testing delivery route: ' + error.message);
+            }
+        }
+
+        // Display route details
+        function displayRouteDetails(route, performance) {
+            const routeDetails = document.getElementById('route-details');
+            const routeSteps = document.getElementById('route-steps');
+            
+            if (route.path && route.path.length > 0) {
+                routeSteps.innerHTML = route.path.map((step, index) => `
+                    <div class="route-step">
+                        <div class="step-number">${index + 1}</div>
+                        <div>
+                            <strong>${step.replace('_', ' ').toUpperCase()}</strong>
+                            ${index < route.path.length - 1 ? '→' : '🏁'}
+                        </div>
+                    </div>
+                `).join('');
+                
+                routeDetails.style.display = 'block';
+            }
+        }
+
+        // Update delivery metrics
+        function updateDeliveryMetrics(data) {
+            document.getElementById('avg-delivery-time').textContent = 
+                data.route.estimatedTime ? `${data.route.estimatedTime} min` : '--';
+            document.getElementById('route-efficiency').textContent = 
+                data.performance.efficiency ? data.performance.efficiency.toFixed(2) : '--';
+            document.getElementById('total-calculations').textContent = '1';
+        }
+
+        // Test scheduling algorithms
+        async function testSchedulingAlgorithms() {
+            try {
+                console.log('Testing scheduling algorithms...');
+
+                const sampleOrders = [
+                    { id: 'order1', arrivalTime: 0, cookingTime: 15, priority: 2 },
+                    { id: 'order2', arrivalTime: 2, cookingTime: 10, priority: 1 },
+                    { id: 'order3', arrivalTime: 5, cookingTime: 20, priority: 3 },
+                    { id: 'order4', arrivalTime: 8, cookingTime: 8, priority: 1 },
+                    { id: 'order5', arrivalTime: 12, cookingTime: 12, priority: 2 }
+                ];
+
+                const response = await fetch(`${API_BASE}/algorithms/compare-scheduling`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orders: sampleOrders })
+                });
+
+                console.log('Scheduling response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Scheduling response data:', data);
+
+                if (data.success) {
+                    displayAlgorithmComparison(data.comparison);
+                    createSchedulingChart(data.comparison);
+                    showSuccess('Scheduling algorithms tested successfully!');
+                } else {
+                    showError('Failed to test scheduling: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error testing scheduling:', error);
+                showError('Error testing scheduling: ' + error.message);
+            }
+        }
+
+        // Display algorithm comparison
+        function displayAlgorithmComparison(comparison) {
+            const container = document.getElementById('algorithm-comparison');
+            const algorithms = Object.keys(comparison.comparison);
+            
+            container.innerHTML = algorithms.map(alg => {
+                const metrics = comparison.comparison[alg];
+                const isBest = comparison.bestAlgorithm.algorithm === alg;
+                
+                return `
+                    <div class="algorithm-card ${isBest ? 'best' : ''}">
+                        <h4>${alg}</h4>
+                        <p>Avg Wait: ${metrics.avgWaitingTime.toFixed(1)}min</p>
+                        <p>Avg Turnaround: ${metrics.avgTurnaroundTime.toFixed(1)}min</p>
+                        <p>Avg Response: ${metrics.avgResponseTime.toFixed(1)}min</p>
+                        ${isBest ? '<p><strong>🏆 BEST</strong></p>' : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Create scheduling chart
+        function createSchedulingChart(comparison) {
+            const ctx = document.getElementById('schedulingChart').getContext('2d');
+            
+            if (schedulingChart) {
+                schedulingChart.destroy();
+            }
+
+            const algorithms = Object.keys(comparison.comparison);
+            const waitingTimes = algorithms.map(alg => comparison.comparison[alg].avgWaitingTime);
+            const turnaroundTimes = algorithms.map(alg => comparison.comparison[alg].avgTurnaroundTime);
+
+            schedulingChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: algorithms,
+                    datasets: [
+                        {
+                            label: 'Average Waiting Time',
+                            data: waitingTimes,
+                            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                            borderColor: 'rgba(102, 126, 234, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Average Turnaround Time',
+                            data: turnaroundTimes,
+                            backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                            borderColor: 'rgba(118, 75, 162, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'OS Scheduling Algorithms Performance Comparison'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Time (minutes)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load availability trends and create heatmap
+        async function loadAvailabilityTrends() {
+            try {
+                console.log('Loading availability trends...');
+
+                const response = await fetch(`${API_BASE}/algorithms/availability-trends`);
+
+                console.log('Availability response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Availability response data:', data);
+
+                if (data.success) {
+                    generateHeatmapFromData(data.availability.hourlyAvailability);
+                    createAvailabilityChart(data.availability);
+                    showSuccess('Availability trends loaded successfully!');
+                } else {
+                    showError('Failed to load availability trends: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error loading availability trends:', error);
+                showError('Error loading availability trends: ' + error.message);
+            }
+        }
+
+        // Generate heatmap from data
+        function generateHeatmapFromData(hourlyData) {
+            const heatmapContainer = document.getElementById('availability-heatmap');
+            
+            heatmapContainer.innerHTML = hourlyData.map(data => {
+                const intensity = data.availability / 100;
+                const color = `hsl(${intensity * 120}, 70%, 50%)`; // Green to red
+                
+                return `
+                    <div class="heatmap-cell" style="background-color: ${color}" title="Hour ${data.hour}: ${data.availability.toFixed(1)}% available">
+                        ${data.hour}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Create availability chart
+        function createAvailabilityChart(availability) {
+            const ctx = document.getElementById('availabilityChart').getContext('2d');
+            
+            if (availabilityChart) {
+                availabilityChart.destroy();
+            }
+
+            availabilityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: availability.hourlyAvailability.map(h => `${h.hour}:00`),
+                    datasets: [{
+                        label: 'Food Availability %',
+                        data: availability.hourlyAvailability.map(h => h.availability),
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '24-Hour Food Availability Trends'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Availability %'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour of Day'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+
+            const content = document.querySelector('.tab-content.active');
+            content.insertBefore(errorDiv, content.firstChild);
+
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'error';
+            successDiv.style.background = '#d4edda';
+            successDiv.style.color = '#155724';
+            successDiv.textContent = message;
+
+            const content = document.querySelector('.tab-content.active');
+            content.insertBefore(successDiv, content.firstChild);
+
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            loadAvailabilityTrends();
+        });
+
+        // Alias functions for buttons
+        function compareAllAlgorithms() { testSchedulingAlgorithms(); }
+        function loadDeliveryTrends() { testDeliveryRoute(); }
+        function generateHeatmap() { loadAvailabilityTrends(); }
+        function loadPerformanceMetrics() { 
+            // Placeholder for performance metrics
+            console.log('Loading performance metrics...');
+        }
+        function analyzeEfficiency() {
+            // Placeholder for efficiency analysis
+            console.log('Analyzing efficiency...');
+        }
+    </script>
+</body>
+</html>

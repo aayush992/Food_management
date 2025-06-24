@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - FYOF</title>
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- My CSS -->
+    <link rel="stylesheet" href="dashboard.css">
+    <style>
+        .chat-container {
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 250px);
+        }
+
+        .chat-list {
+            flex: 1;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-window {
+            flex: 2;
+            background: var(--light);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--grey);
+            margin-bottom: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .message.received {
+            flex-direction: row;
+        }
+
+        .message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .message .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .message .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message .content {
+            max-width: 70%;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .message.received .content {
+            background: var(--grey);
+        }
+
+        .message.sent .content {
+            background: var(--blue);
+            color: var(--light);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            padding-top: 20px;
+            border-top: 1px solid var(--grey);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--grey);
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            background: var(--blue);
+            color: var(--light);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .chat-list .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-list .chat-item:hover {
+            background: var(--grey);
+        }
+
+        .chat-list .chat-item.active {
+            background: var(--blue);
+            color: var(--light);
+        }
+
+        .chat-item .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .chat-item .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-item .details {
+            flex: 1;
+        }
+
+        .chat-item .details h4 {
+            margin-bottom: 5px;
+        }
+
+        .chat-item .details p {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="index.html" class="brand">
+            <span class="text"><img src="images/logo.png" alt="our logo"></span>
+        </a>
+        <ul class="side-menu top">
+            <li>
+                <a href="dashboard.html">
+                    <i class='bx bxs-dashboard'></i>
+                    <span class="text">Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="analytics.html">
+                    <i class='bx bxs-doughnut-chart'></i>
+                    <span class="text">Analytics</span>
+                </a>
+            </li>
+            <li class="active">
+                <a href="messages.html">
+                    <i class='bx bxs-message-dots'></i>
+                    <span class="text">Message</span>
+                </a>
+            </li>
+            <li>
+                <a href="service.html">
+                    <i class='bx bxs-group'></i>
+                    <span class="text">Help</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="settings.html">
+                    <i class='bx bxs-cog'></i>
+                    <span class="text">Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <a href="index.html" class="nav-link">Home</a>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search messages...">
+                    <button type="submit" class="search-btn"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+            <a href="#" class="notification">
+                <i class='bx bxs-bell'></i>
+                <span class="num">3</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/person1.jpg">
+            </a>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <div class="head-title">
+                <div class="left">
+                    <h1>Messages</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><i class='bx bx-chevron-right'></i></li>
+                        <li><a class="active" href="#">Messages</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-list">
+                    <div class="chat-item active">
+                        <div class="avatar">
+                            <img src="images/person2.jpg" alt="User">
+                        </div>
+                        <div class="details">
+                            <h4>Customer Support</h4>
+                            <p>How can I help you today?</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="avatar">
+                            <img src="images/person1.jpg" alt="User">
+                        </div>
+                        <div class="details">
+                            <h4>Order #1234</h4>
+                            <p>Order has been delivered</p>
+                        </div>
+                    </div>
+                    <div class="chat-item">
+                        <div class="avatar">
+                            <img src="images/person2.jpg" alt="User">
+                        </div>
+                        <div class="details">
+                            <h4>Technical Support</h4>
+                            <p>Issue resolved</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <h3>Customer Support</h3>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="message received">
+                            <div class="avatar">
+                                <img src="images/person2.jpg" alt="Support">
+                            </div>
+                            <div class="content">
+                                <p>Hello! How can I assist you today?</p>
+                            </div>
+                        </div>
+                        <div class="message sent">
+                            <div class="avatar">
+                                <img src="images/person1.jpg" alt="You">
+                            </div>
+                            <div class="content">
+                                <p>Hi, I need help with my recent order.</p>
+                            </div>
+                        </div>
+                        <div class="message received">
+                            <div class="avatar">
+                                <img src="images/person2.jpg" alt="Support">
+                            </div>
+                            <div class="content">
+                                <p>Sure, I'd be happy to help. Could you please provide your order number?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" placeholder="Type your message...">
+                        <button type="submit">Send</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+
+    <script>
+        // Dark mode toggle
+        const switchMode = document.getElementById('switch-mode');
+        switchMode.addEventListener('change', function () {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        });
+
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+            switchMode.checked = true;
+        }
+
+        // Sidebar toggle
+        const menuBar = document.querySelector('#content nav .bx.bx-menu');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBar.addEventListener('click', function () {
+            sidebar.classList.toggle('hide');
+        });
+
+        // Logout functionality
+        document.querySelector('.logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        });
+
+        // Chat functionality
+        const chatInput = document.querySelector('.chat-input input');
+        const sendButton = document.querySelector('.chat-input button');
+        const chatMessages = document.querySelector('.chat-messages');
+
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                const messageHTML = `
+                    <div class="message sent">
+                        <div class="avatar">
+                            <img src="images/person1.jpg" alt="You">
+                        </div>
+                        <div class="content">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html> 
